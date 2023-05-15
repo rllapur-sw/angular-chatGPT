@@ -1,8 +1,6 @@
-import { Component } from '@angular/core';
-
-import { gptModels } from '../models/constants';
-import { Choice, Message, ResponseModel } from '../models/gpt-response';
-import { ChatService } from '../services/chat.service';
+import {Component} from '@angular/core';
+import {Choice, Message} from '../interfaces/gpt-response.interface';
+import {ChatService} from '../services/chat.service';
 
 @Component({
   selector: 'app-demo',
@@ -11,7 +9,6 @@ import { ChatService } from '../services/chat.service';
 })
 export class DemoComponent {
   choices: Choice[] | undefined;
-  gptModels = gptModels;
   promptText = '';
   showSpinner = false;
   total_tokens = 0;
@@ -19,7 +16,8 @@ export class DemoComponent {
   imageUrl = '';
   modelUsed = '';
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService) {
+  }
 
   getText(message: Message) {
     return message.content.split('\n').filter((f) => f.length > 0);
@@ -32,7 +30,7 @@ export class DemoComponent {
       this.imageUrl = '';
       this.showSpinner = true;
       if (isText) {
-        this.chatService.sendToChatTurbo(this.promptText).subscribe(({ choices, usage, model }) => {
+        this.chatService.createChatCompletion(this.promptText).subscribe(({choices, usage, model}) => {
           this.choices = choices;
           this.total_tokens = usage.total_tokens;
           this.modelUsed = model;
@@ -41,7 +39,7 @@ export class DemoComponent {
           this.promptText = '';
         });
       } else {
-        this.chatService.createImage(this.promptText).subscribe((response: any) => {
+        this.chatService.generateImage(this.promptText).subscribe((response: any) => {
           this.textMode = false;
           this.imageUrl = response.data[0].url;
           this.showSpinner = false;

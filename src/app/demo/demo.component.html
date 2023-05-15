@@ -1,15 +1,15 @@
-<div class="container">
+<div class="container my-5">
   <h2>Ask anything to ChatGPT</h2>
   <div>
     <p>This is a demo app to see how powerful ChatGPT answers your questions</p>
   </div>
-  <hr />
+  <hr/>
 
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
         <h3>Request prompt for ChatGPT AI</h3>
-        <hr />
+        <hr/>
         <textarea
           rows="10"
           placeholder="Enter your prompt here"
@@ -19,14 +19,14 @@
         ></textarea>
       </div>
       <div>
-        <br />
+        <br/>
         <button
           style="margin-right: 2rem"
           class="btn btn-primary"
           (click)="invokeGPT(true)"
           [disabled]="showSpinner"
         >
-          Generate text GPT-Turbo
+          Generate text
           <i class="fa-solid fa-file-lines"></i>
         </button>
         <button class="btn btn-primary" (click)="invokeGPT(false)" [disabled]="showSpinner">
@@ -37,22 +37,29 @@
     </div>
     <div class="col-md-6">
       <h3>Response from ChatGPT AI</h3>
-      <hr />
-      <h4 *ngIf="showSpinner">Processing, please wait...</h4>
+      <hr/>
+      <div *ngIf="showSpinner">
+        <h4>Processing, please wait...</h4>
+        <div class="d-flex justify-content-center mt-5">
+          <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
       <ng-container *ngIf="imageUrl; else showText">
-        <img [src]="imageUrl" />
+        <img [src]="imageUrl" alt=""/>
       </ng-container>
       <ng-template #showText>
         <div *ngFor="let choice of choices">
-          <ul class="list-group" *ngFor="let data of getText(choice.message)">
+          <ul class="list-group list-group-flush" *ngFor="let data of getText(choice.message)">
             <li class="list-group-item">{{ data }}</li>
-            <br />
+            <br/>
           </ul>
         </div>
       </ng-template>
     </div>
   </div>
-  <br />
+  <br/>
 
   <div *ngIf="textMode">
     <h4>
@@ -63,27 +70,5 @@
       Model used:
       <span> {{ modelUsed }} </span>
     </h4>
-  </div>
-
-  <h3>Models</h3>
-  <br />
-  <div class="row">
-    <div class="col-md-6" *ngFor="let item of gptModels">
-      <div class="card">
-        <h5 class="card-header">Name - {{ item.model }}</h5>
-        <div class="card-body">
-          <h5 class="card-title">Description</h5>
-          <p class="card-text">{{ item.description }}</p>
-          <p>{{ item.maxRequest }}</p>
-          <a
-            href="https://beta.openai.com/docs/models/gpt-3"
-            target="_blank"
-            class="btn btn-primary"
-            >More details</a
-          >
-        </div>
-      </div>
-      <br />
-    </div>
   </div>
 </div>

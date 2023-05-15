@@ -1,0 +1,26 @@
+.push-right {
+  margin-left: 90%;
+}
+
+.person {
+  font-style: italic;
+  font-weight: bold;
+  color: #e96d2f;
+}
+
+.bot {
+  font-weight: bold;
+  color: #0856A4;
+}
+
+.frame-box {
+  border: dotted 2px #e96d2f;
+  padding: 20px;
+  min-height: 400px;
+  max-height: 400px;
+  overflow-y: scroll
+}
+
+.padding {
+  padding: 5px;
+}

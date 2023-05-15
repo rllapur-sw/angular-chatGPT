@@ -28,7 +28,7 @@ export interface Usage {
 }
 
 export interface ChatWithBot {
+  data: string;
   person: string;
-  response: string;
   cssClass: string;
 }

@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { from, Observable } from 'rxjs';
-import { ResponseModel } from '../models/gpt-response';
-import { Configuration, OpenAIApi } from 'openai';
-import { environment } from 'src/environments/environment';
-import { CreateChatCompletionRequest } from 'openai';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {from, Observable} from 'rxjs';
+import {ResponseModel} from '../interfaces/gpt-response.interface';
+import {Configuration, OpenAIApi} from 'openai';
+import {environment} from 'src/environments/environment';
+import {CreateChatCompletionRequest} from 'openai';
 
 @Injectable({
   providedIn: 'root',
@@ -18,28 +18,28 @@ export class ChatService {
   });
 
   data = {
-    model: 'text-davinci-003', //'text-davinci-003',//"text-curie-001", //text-babbage-001, //text-ada-001
     temperature: 0.95,
-    max_tokens: 150,
-    top_p: 1.0,
+    max_tokens: 1000,
+    top_p: 1,
     frequency_penalty: 0.0,
     presence_penalty: 0.0,
   };
 
   constructor(private http: HttpClient) {
-    const config = new Configuration({ apiKey: environment.apiKey });
+    const config = new Configuration({apiKey: environment.apiKey});
     this.openai = new OpenAIApi(config);
   }
 
-  sendToChatTurbo(prompt: string): Observable<ResponseModel> {
-    const  body: CreateChatCompletionRequest = {
+  createChatCompletion(prompt: string): Observable<ResponseModel> {
+    const body: CreateChatCompletionRequest = {
       model: 'gpt-3.5-turbo',
       messages: [
         {
           role: "assistant",
           content: prompt
         }
-      ]
+      ],
+      ...this.data
     };
     return this.http.post<ResponseModel>('https://api.openai.com/v1/chat/completions', body, {
       headers: this.header,
@@ -50,12 +50,13 @@ export class ChatService {
   createCompletionSendMessage(prompt: string): Observable<any> {
     const body = {
       prompt,
+      model: 'text-davinci-003',
       ...this.data
     };
     return from(this.openai.createCompletion(body));
   }
 
-  createImage(prompt: string): Observable<any> {
+  generateImage(prompt: string): Observable<any> {
     const body = {
       prompt,
       n: 1,
