@@ -7,7 +7,7 @@ import { EnvironmentConfiguration } from "src/app/interfaces/environment-configu
 export const environment: EnvironmentConfiguration = {
   env_name: 'dev',
   production: false,
-  apiKey: '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'  // Set your personal api key
+  apiKey: ''  // Set your personal api key
 };
 
 /*
