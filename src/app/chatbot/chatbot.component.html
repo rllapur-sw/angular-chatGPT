@@ -10,11 +10,19 @@
             <div class="col-md-8">
               <div class="frame-box">
                 <div *ngFor="let item of chatConversation">
-                  <p class="card-text padding" [ngClass]="item.cssClass">
-                    {{ item.person }}: {{ item.data }}
-                  </p>
+                  <ng-container *ngIf="item.person === 'You'; else bot">
+                    <p class="person card-text mt-3">
+                      {{ item.person }}: {{ item.question }}
+                    </p>
+                  </ng-container>
+                  <ng-template #bot>
+                    <p class="bot card-text mt-3"> {{ item.person }}: </p>
+                    <p *ngFor="let answer of item.answers" class="bot card-text">
+                      {{ answer }}
+                    </p>
+                  </ng-template>
                 </div>
-                <div class="d-flex justify-content-center align-content-center">
+                <div class="d-flex justify-content-center align-content-center mt-5">
                   <img src="../../assets/loading.gif" *ngIf="showSpinner" width="50px" height="50px"/>
                 </div>
               </div>
@@ -31,6 +39,18 @@
               <button class="btn btn-primary push-right" (click)="checkResponse()">Send</button>
             </div>
             <div class="col-md-2"></div>
+            <br/>
+
+            <div class="col-md-12" *ngIf="total_tokens > 0">
+              <h4>
+                Consumed tokens:
+                <span> {{ total_tokens }} </span>
+              </h4>
+              <h4>
+                Model used:
+                <span> {{ modelUsed }} </span>
+              </h4>
+            </div>
           </div>
         </div>
       </div>

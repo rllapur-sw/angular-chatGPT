@@ -5,6 +5,7 @@ import {ResponseModel} from '../interfaces/gpt-response.interface';
 import {Configuration, OpenAIApi} from 'openai';
 import {environment} from 'src/environments/environment';
 import {CreateChatCompletionRequest} from 'openai';
+import {CreateEditRequest} from "openai/api";
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,7 @@ export class ChatService {
     this.openai = new OpenAIApi(config);
   }
 
-  createChatCompletion(prompt: string): Observable<ResponseModel> {
+  createChatCompletion(prompt: string): Observable<any> {
     const body: CreateChatCompletionRequest = {
       model: 'gpt-3.5-turbo',
       messages: [
@@ -41,19 +42,10 @@ export class ChatService {
       ],
       ...this.data
     };
-    return this.http.post<ResponseModel>('https://api.openai.com/v1/chat/completions', body, {
-      headers: this.header,
-    });
-    // return from(this.openai.createChatCompletion(body));
-  }
-
-  createCompletionSendMessage(prompt: string): Observable<any> {
-    const body = {
-      prompt,
-      model: 'text-davinci-003',
-      ...this.data
-    };
-    return from(this.openai.createCompletion(body));
+    // return this.http.post<ResponseModel>('https://api.openai.com/v1/chat/completions', body, {
+    //   headers: this.header,
+    // });
+    return from(this.openai.createChatCompletion(body));
   }
 
   generateImage(prompt: string): Observable<any> {
@@ -64,6 +56,20 @@ export class ChatService {
       response_format: 'url'
     };
     return this.http.post<any>('https://api.openai.com/v1/images/generations', body, {
+      headers: this.header,
+    });
+  }
+
+  createEdit(prompt: string): Observable<any> {
+    const body: CreateEditRequest = {
+      model: 'text-davinci-edit-001',
+      input: prompt,
+      instruction: "Corrige los errores de escritura",
+      // instruction: "Fix the spelling mistakes",
+      // instruction: "Please edit the following sentence for grammar and clarity",
+      // instruction: "Make this email more professional and concise",
+    };
+    return this.http.post<ResponseModel>('https://api.openai.com/v1/edits', body, {
       headers: this.header,
     });
   }

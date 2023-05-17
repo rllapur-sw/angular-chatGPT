@@ -1,14 +1,10 @@
 <div class="container my-5">
-  <h2>Ask anything to ChatGPT</h2>
-  <div>
-    <p>This is a demo app to see how powerful ChatGPT answers your questions</p>
-  </div>
+  <h1 class="d-flex justify-content-center">OpenAI Edit / DALL-E APIs demo</h1>
   <hr/>
-
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <h3>Request prompt for ChatGPT AI</h3>
+        <h3>Request prompt</h3>
         <hr/>
         <textarea
           rows="10"
@@ -21,22 +17,22 @@
       <div>
         <br/>
         <button
-          style="margin-right: 2rem"
+          style="margin-right: 2rem; width: 12rem"
           class="btn btn-primary"
-          (click)="invokeGPT(true)"
+          (click)="callOpenAIAPIMethod(true)"
           [disabled]="showSpinner"
         >
-          Generate text
+          <span style="padding-right: 0.5rem"> Fix text </span>
           <i class="fa-solid fa-file-lines"></i>
         </button>
-        <button class="btn btn-primary" (click)="invokeGPT(false)" [disabled]="showSpinner">
-          Generate image
+        <button style="width: 12rem" class="btn btn-primary" (click)="callOpenAIAPIMethod(false)" [disabled]="showSpinner">
+          <span style="padding-right: 0.5rem">Generate image</span>
           <i class="fa-solid fa-image"></i>
         </button>
       </div>
     </div>
     <div class="col-md-6">
-      <h3>Response from ChatGPT AI</h3>
+      <h3>Response from the API</h3>
       <hr/>
       <div *ngIf="showSpinner">
         <h4>Processing, please wait...</h4>
@@ -47,28 +43,11 @@
         </div>
       </div>
       <ng-container *ngIf="imageUrl; else showText">
-        <img [src]="imageUrl" alt=""/>
+        <img [src]="imageUrl" alt="DallE image"/>
       </ng-container>
       <ng-template #showText>
-        <div *ngFor="let choice of choices">
-          <ul class="list-group list-group-flush" *ngFor="let data of getText(choice.message)">
-            <li class="list-group-item">{{ data }}</li>
-            <br/>
-          </ul>
-        </div>
+        <p> {{ answer }} </p>
       </ng-template>
     </div>
-  </div>
-  <br/>
-
-  <div *ngIf="textMode">
-    <h4>
-      Consumed tokens:
-      <span> {{ total_tokens }} </span>
-    </h4>
-    <h4>
-      Model used:
-      <span> {{ modelUsed }} </span>
-    </h4>
   </div>
 </div>

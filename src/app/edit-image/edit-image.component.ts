@@ -1,20 +1,18 @@
 import {Component} from '@angular/core';
-import {Choice, Message} from '../interfaces/gpt-response.interface';
+import {Message} from '../interfaces/gpt-response.interface';
 import {ChatService} from '../services/chat.service';
 
 @Component({
-  selector: 'app-demo',
-  templateUrl: './demo.component.html',
-  styleUrls: ['demo.component.scss'],
+  selector: 'app-edit-image',
+  templateUrl: './edit-image.component.html',
+  styleUrls: ['./edit-image.component.css']
 })
-export class DemoComponent {
-  choices: Choice[] | undefined;
+export class EditImageComponent {
+  answer: string = '';
   promptText = '';
   showSpinner = false;
-  total_tokens = 0;
   textMode = false;
   imageUrl = '';
-  modelUsed = '';
 
   constructor(private chatService: ChatService) {
   }
@@ -23,17 +21,15 @@ export class DemoComponent {
     return message.content.split('\n').filter((f) => f.length > 0);
   }
 
-  async invokeGPT(isText: boolean) {
+  async callOpenAIAPIMethod(isText: boolean) {
     if (this.promptText.length < 2) return;
     try {
-      this.choices = [];
+      this.answer = '';
       this.imageUrl = '';
       this.showSpinner = true;
       if (isText) {
-        this.chatService.createChatCompletion(this.promptText).subscribe(({choices, usage, model}) => {
-          this.choices = choices;
-          this.total_tokens = usage.total_tokens;
-          this.modelUsed = model;
+        this.chatService.createEdit(this.promptText).subscribe(({choices}) => {
+          this.answer = choices[0].text;
           this.showSpinner = false;
           this.textMode = true;
           this.promptText = '';
@@ -43,7 +39,6 @@ export class DemoComponent {
           this.textMode = false;
           this.imageUrl = response.data[0].url;
           this.showSpinner = false;
-          this.modelUsed = '';
           this.promptText = '';
         });
       }

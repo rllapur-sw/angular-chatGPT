@@ -12,17 +12,20 @@ export class ChatbotComponent {
   response!: ResponseModel | undefined;
   promptText = '';
   showSpinner = false;
+  total_tokens = 0;
+  modelUsed = '';
+  // answers: string[] = [];
 
   constructor(private chatService: ChatService) {
   }
 
   checkResponse(): void {
-    this.pushChatContent(this.promptText, 'You', 'person');
+    this.pushChatContent(this.promptText, [], 'You');
     this.invokeGPT();
   }
 
-  pushChatContent(data: string, person: string, cssClass: string): void {
-    const chatToPush: ChatWithBot = {data, person, cssClass};
+  pushChatContent(question: string, answers: string[], person: string): void {
+    const chatToPush: ChatWithBot = {question, answers, person};
     this.chatConversation.push(chatToPush);
   }
 
@@ -32,9 +35,11 @@ export class ChatbotComponent {
     try {
       this.response = undefined;
       this.showSpinner = true;
-      this.chatService.createCompletionSendMessage(this.promptText).subscribe((apiResponse: ResponseModel) => {
-        this.response = apiResponse.data as ResponseModel;
-        this.pushChatContent(this.response.choices[0].text.trim(), 'Mr Bot', 'bot');
+      this.chatService.createChatCompletion(this.promptText).subscribe(({choices, usage, model}) => {
+        this.total_tokens = usage.total_tokens;
+        this.modelUsed = model;
+        this.showSpinner = false;
+        this.pushChatContent(this.promptText, choices[0].message.content.split('\n'), 'Mr Bot');
         this.showSpinner = false;
         this.promptText = '';
       });

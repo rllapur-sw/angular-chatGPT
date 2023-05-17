@@ -7,9 +7,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {routedComponents, AppRoutingModule} from './app-routing.module';
 import {ChatbotComponent} from './chatbot/chatbot.component';
+import {EditImageComponent} from './edit-image/edit-image.component';
 
 @NgModule({
-  declarations: [AppComponent, routedComponents, ChatbotComponent],
+  declarations: [AppComponent, routedComponents, ChatbotComponent, EditImageComponent],
   imports: [
     BrowserModule,
     FormsModule,
