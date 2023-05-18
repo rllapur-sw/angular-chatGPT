@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {from, Observable} from 'rxjs';
 import {ResponseModel} from '../interfaces/gpt-response.interface';
 import {Configuration, OpenAIApi} from 'openai';
@@ -10,7 +10,7 @@ import {CreateEditRequest} from "openai/api";
 @Injectable({
   providedIn: 'root',
 })
-export class ChatService {
+export class OpenaiService {
   private openai: OpenAIApi;
 
   header = new HttpHeaders({
@@ -42,10 +42,10 @@ export class ChatService {
       ],
       ...this.data
     };
-    // return this.http.post<ResponseModel>('https://api.openai.com/v1/chat/completions', body, {
-    //   headers: this.header,
-    // });
-    return from(this.openai.createChatCompletion(body));
+    return this.http.post<ResponseModel>('https://api.openai.com/v1/chat/completions', body, {
+      headers: this.header,
+    });
+    // return from(this.openai.createChatCompletion(body));
   }
 
   generateImage(prompt: string): Observable<any> {
@@ -65,9 +65,6 @@ export class ChatService {
       model: 'text-davinci-edit-001',
       input: prompt,
       instruction: "Corrige los errores de escritura",
-      // instruction: "Fix the spelling mistakes",
-      // instruction: "Please edit the following sentence for grammar and clarity",
-      // instruction: "Make this email more professional and concise",
     };
     return this.http.post<ResponseModel>('https://api.openai.com/v1/edits', body, {
       headers: this.header,

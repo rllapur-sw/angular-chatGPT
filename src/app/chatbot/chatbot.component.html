@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <br/>
       <div class="card">
-        <h4 class="card-header center">Chatting With Mr BOT powered by ChatGPT</h4>
+        <h4 class="card-header center">Chatting With Mr BOT</h4>
         <div class="card-body">
           <div class="row my-4">
             <div class="col-md-2"></div>
@@ -32,11 +32,11 @@
                 cols="15"
                 class="form-control"
                 [(ngModel)]="promptText"
-                (keyup.enter)="checkResponse()"
+                (keyup.enter)="onAskGPT()"
                 placeholder="Start by asking what you are looking for"
               ></textarea>
               <br/>
-              <button class="btn btn-primary push-right" (click)="checkResponse()">Send</button>
+              <button style="width: 100px" class="btn btn-primary" (click)="onAskGPT()">Ask GPT</button>
             </div>
             <div class="col-md-2"></div>
             <br/>

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Message} from '../interfaces/gpt-response.interface';
-import {ChatService} from '../services/chat.service';
+import {OpenaiService} from '../services/openai.service';
 
 @Component({
   selector: 'app-edit-image',
@@ -14,7 +14,7 @@ export class EditImageComponent {
   textMode = false;
   imageUrl = '';
 
-  constructor(private chatService: ChatService) {
+  constructor(private openaiService: OpenaiService) {
   }
 
   getText(message: Message) {
@@ -28,14 +28,14 @@ export class EditImageComponent {
       this.imageUrl = '';
       this.showSpinner = true;
       if (isText) {
-        this.chatService.createEdit(this.promptText).subscribe(({choices}) => {
+        this.openaiService.createEdit(this.promptText).subscribe(({choices}) => {
           this.answer = choices[0].text;
           this.showSpinner = false;
           this.textMode = true;
           this.promptText = '';
         });
       } else {
-        this.chatService.generateImage(this.promptText).subscribe((response: any) => {
+        this.openaiService.generateImage(this.promptText).subscribe((response: any) => {
           this.textMode = false;
           this.imageUrl = response.data[0].url;
           this.showSpinner = false;

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ChatWithBot, ResponseModel} from '../interfaces/gpt-response.interface';
-import {ChatService} from '../services/chat.service';
+import {OpenaiService} from '../services/openai.service';
 
 @Component({
   selector: 'app-chatbot',
@@ -14,14 +14,13 @@ export class ChatbotComponent {
   showSpinner = false;
   total_tokens = 0;
   modelUsed = '';
-  // answers: string[] = [];
 
-  constructor(private chatService: ChatService) {
+  constructor(private openaiService: OpenaiService) {
   }
 
-  checkResponse(): void {
+  onAskGPT(): void {
     this.pushChatContent(this.promptText, [], 'You');
-    this.invokeGPT();
+    this.getChatCompletion();
   }
 
   pushChatContent(question: string, answers: string[], person: string): void {
@@ -29,13 +28,11 @@ export class ChatbotComponent {
     this.chatConversation.push(chatToPush);
   }
 
-  async invokeGPT() {
+  getChatCompletion(): void {
     if (this.promptText.length < 2) return;
-
     try {
-      this.response = undefined;
       this.showSpinner = true;
-      this.chatService.createChatCompletion(this.promptText).subscribe(({choices, usage, model}) => {
+      this.openaiService.createChatCompletion(this.promptText).subscribe(({choices, usage, model}) => {
         this.total_tokens = usage.total_tokens;
         this.modelUsed = model;
         this.showSpinner = false;
